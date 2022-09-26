@@ -3,14 +3,19 @@
 #include "Catcher.h"
 #include "World.h"
 
-int main() 
+//int main() 
+//{
+//	World* world;
+//	Cat* cat;
+//	Catcher* catcher;
+//
+//	cat->Move(world);
+//    catcher->Move(world);
+//
+//	return 0;
+//}
+
+Agent::Agent() 
 {
-	World* world;
-	Cat* cat;
-	Catcher* catcher;
 
-	cat->Move(world);
-    catcher->Move(world);
-
-	return 0;
 }
