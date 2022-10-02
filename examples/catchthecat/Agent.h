@@ -9,6 +9,8 @@ struct queueEntry {
   Point2D position;
   int weight;
   bool operator<(const queueEntry& rhs) const;
+  void getWeight() { return; }
+  int setWeight(int weight);
 };
 
 class Agent {
