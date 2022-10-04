@@ -2,6 +2,11 @@
 #define AGENT_H
 #include "Point2D.h"
 #include <unordered_map>
+#include <map>
+#include<iostream>
+#include <iomanip>
+
+using namespace std;
 
 class World;
 
@@ -13,12 +18,19 @@ struct queueEntry {
   int setWeight(int weight);
 };
 
+//struct Point {
+//  Point(int x, int y) : x(x), y(y){};
+//};
+
 class Agent {
 public:
   explicit Agent()= default;;
   virtual Point2D Move(World*)=0;
   std::unordered_map<int, std::unordered_map <int, bool>> visited;
   std::unordered_map<int, std::unordered_map<int, Point2D>> from;
+
+  std::map<int, std::map<int, char>> blocked;
+  
 };
 
 #endif  // AGENT_H

@@ -4,14 +4,22 @@
 #include <algorithm>
 
 Point2D Catcher::Move(World* world) {
+  //block path base on the direction where the cat is facing
+  //last element
+
   visited.clear();
   from.clear();
+  
   std::vector<queueEntry> queue;
-  queue.push_back({world->getCat(), 0});
 
-  auto head = queue[0];
-  queue.erase(queue.begin());
-  visited[head.position.x][head.position.y] = true;
+  while (!queue.empty()) {
+    std::sort(queue.begin(), queue.end());
+    
+    auto last = queue[5];
+    queue.erase(queue.end());
+
+    blocked[world->getCat().x - 30][world->getCat().y - 30];
+  }
 
   auto side = world->getWorldSideSize()/2;
   for(;;) {

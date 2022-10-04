@@ -9,8 +9,8 @@ Point2D Cat::Move(World* world) {
   std::vector<queueEntry> queue;
   
   queue.push_back({world->getCat(), 0});
-  //Point2D Catcher point;
-
+  
+  //first element
   while (!queue.empty()) {
     std::sort(queue.begin(), queue.end());
     // remove the head
@@ -24,19 +24,14 @@ Point2D Cat::Move(World* world) {
     // - if it is not visted, or the block...
     // -- add to the queue with 1 unit of weight increased
     // -- mark where this element cone from
-    int x = 0;
-    int y = 0;
+    
 
-    for (int size = 0; size < 6; size++) 
+    for (int size = 0; size < world->getWorldSideSize(); size++) 
     {
-      if (!visited[x][y]) 
+      if (!visited[world->getCat().x][world->getCat().y]) 
       {
-        queue.push_back(queue[size]);
-        queue[size].setWeight(1);
-        visited[x][y] = true;
-        from.extract(size);
-        x++;
-        y++;
+        queue.push_back({world->getCat(), 1});
+        visited[world->getCat().x][world->getCat().y] = true;
       }
     }
     
