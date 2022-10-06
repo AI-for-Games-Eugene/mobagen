@@ -10,12 +10,20 @@ using namespace std;
 
 class World;
 
-struct queueEntry {
+//struct queueEntry {
+//  Point2D position;
+//  int weight;
+//  bool operator<(const queueEntry& rhs) const;
+//};
+
+struct EnrichedMapEntry {
   Point2D position;
+  Point2D from;
+  bool visited;
+  bool inQueue;
+  bool isBlocked;
   int weight;
-  bool operator<(const queueEntry& rhs) const;
-  void getWeight() { return; }
-  int setWeight(int weight);
+  bool operator<(const EnrichedMapEntry& rhs) const;
 };
 
 //struct Point {
@@ -26,10 +34,10 @@ class Agent {
 public:
   explicit Agent()= default;;
   virtual Point2D Move(World*)=0;
-  std::unordered_map<int, std::unordered_map <int, bool>> visited;
+  /*std::unordered_map<int, std::unordered_map <int, bool>> visited;
   std::unordered_map<int, std::unordered_map<int, Point2D>> from;
 
-  std::map<int, std::map<int, char>> blocked;
+  std::map<int, std::map<int, char>> blocked;*/
   
 };
 

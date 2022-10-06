@@ -7,7 +7,7 @@ Point2D Catcher::Move(World* world) {
   //block path base on the direction where the cat is facing
   //last element
 
-  visited.clear();
+  /*visited.clear();
   from.clear();
   
   std::vector<queueEntry> queue;
@@ -19,7 +19,7 @@ Point2D Catcher::Move(World* world) {
     queue.erase(queue.end());
 
     blocked[world->getCat().x - 30][world->getCat().y - 30];
-  }
+  }*/
 
   auto side = world->getWorldSideSize()/2;
   for(;;) {
