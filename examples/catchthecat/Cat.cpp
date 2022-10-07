@@ -2,6 +2,7 @@
 #include "World.h"
 #include <stdexcept>
 #include <algorithm>
+#include <math.h>
 
 Point2D Cat::Move(World* world) {
   
@@ -13,13 +14,8 @@ Point2D Cat::Move(World* world) {
       for (auto line = -world->getWorldSideSize() / 2; line >= world->getWorldSideSize() / 2; line++) 
       {
         for (auto col = -world->getWorldSideSize() / 2; col >= world->getWorldSideSize() / 2; col++) {
-        m[line][col] = {{col, line},
-                      {INT_MAX, INT_MAX},
-                      false,
-                      false,
-                      world->getContent({col, line}),
-                      INT_MAX};
-    m[cat.y][cat.x].isBlocked = true;
+        m[line][col] = {{col, line}, {INT_MAX, INT_MAX}, false, false, world->getContent({col, line}), INT_MAX};
+        m[cat.y][cat.x].isBlocked = true;
         }
         
       }
@@ -38,7 +34,7 @@ Point2D Cat::Move(World* world) {
       Point2D exit = {INT_MAX,INT_MAX};
 
       //while we have elements to be visited, visit them!
-      while (!queue.empty() /*|| your win condition*/) 
+      while (!queue.empty() /*|| your win condition*/ /**/) 
       {
 
         //fetch the first element of the queue
@@ -46,24 +42,32 @@ Point2D Cat::Move(World* world) {
         queue.erase(queue.begin());
         m[head.y][head.x].inQueue = false;
         m[head.y][head.x].visited = true;
-
+        cout << queue.size() << endl;
         for (auto neigh : world->neighbors(head)) 
         {
-            if (m[neigh.y][neigh.x].visited || m[neigh.y][neigh.x].inQueue ||m[neigh.y][neigh.x].isBlocked)
+            if (m[neigh.y][neigh.x].visited || m[neigh.y][neigh.x].inQueue ||m[neigh.y][neigh.x].isBlocked || 
+                 abs(neigh.y) >= world->getWorldSideSize() / 2 &&
+                  abs(neigh.x) >= world->getWorldSideSize() / 2)
                 // check other conditions too
             {
                 continue;
             }
-
+            cout << "( " << neigh.x << ", " << neigh.y << ")";
             queue.push_back(neigh);
             m[neigh.y][neigh.x].weight = m[head.y][head.x].weight + 1;
+            m[neigh.y][neigh.x].inQueue = true;
             m[neigh.y][neigh.x].from = head;
+            
       
         }
+        cout << endl;
         // win/exit condition found
+        //if (exit)
         // exit = head;
         //mark the head as visited
-        //
+        
+        
+        //m[head.y][head.x].visited = true;
       }
 
       //build the path
@@ -132,7 +136,7 @@ Point2D Cat::Move(World* world) {
     
   }
         */
-  auto rand = Random::Range(0,5);
+  /*auto rand = Random::Range(0,5);
   auto pos = world->getCat();
   switch(rand){
     case 0:
@@ -149,5 +153,5 @@ Point2D Cat::Move(World* world) {
       return World::SE(pos);
     default:
       throw "random out of range";
-  }
+  }*/
 }

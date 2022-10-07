@@ -7,6 +7,8 @@ Point2D Catcher::Move(World* world) {
   //block path base on the direction where the cat is facing
   //last element
 
+
+
   /*visited.clear();
   from.clear();
   
