@@ -17,7 +17,6 @@ class World;
 //};
 
 struct EnrichedMapEntry {
-  Point2D position;
   Point2D from;
   bool visited;
   bool inQueue;
