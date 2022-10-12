@@ -34,12 +34,15 @@ Point2D Cat::Move(World* world) {
       //while we have elements to be visited, visit them!
       while (!queue.empty()) 
       {
-
         //fetch the first element of the queue
         auto head = queue[0];
         queue.erase(queue.begin());
         m[head.y][head.x].inQueue = false;
         m[head.y][head.x].visited = true;
+
+        if (head == exit) {
+          break;
+        }
         
         for (auto neigh : world->neighbors(head)) 
         {
@@ -56,17 +59,16 @@ Point2D Cat::Move(World* world) {
             m[neigh.y][neigh.x].weight = m[head.y][head.x].weight + 1;
             m[neigh.y][neigh.x].inQueue = true;
             m[neigh.y][neigh.x].from = head;
-
+            
             
             
         }
         // win/exit condition found
-        //if (exit)
-        // exit = head;
+
+        
+        
         //mark the head as visited
-        
-        
-        //m[head.y][head.x].visited = true;
+        m[head.y][head.x].visited = true;
       }
 
       //build the path
@@ -84,56 +86,53 @@ Point2D Cat::Move(World* world) {
       //now we have the path;
       // the cat move probably would be the tail 
       //and the catcher move would be the head of the path
-  
+      
+
+      while (cat != exit) {
+        path.push_back(cat);
+        cat = m[cat.y][cat.x].from;
+      }
+      path.push_back(exit);  // optional
+      std::reverse(path.begin(), path.end());
+
+      return cat;
+
+      /*if (!m[cat.y][cat.x].isBlocked) {
+        return World::NE(m[cat.y][cat.x].from);
+      }
+      else if (m[cat.y][cat.x].isBlocked) {
+        return World::NW(m[cat.y][cat.x].from);
+      }
+      else if (m[cat.y][cat.x].isBlocked) {
+        return World::E(m[cat.y][cat.x].from);
+      }
+      else if (m[cat.y][cat.x].isBlocked) {
+        return World::W(m[cat.y][cat.x].from);
+      }
+      else if (m[cat.y][cat.x].isBlocked) {
+        return World::SW(m[cat.y][cat.x].from);
+      }
+      else if (m[cat.y][cat.x].isBlocked) {
+        return World::SE(m[cat.y][cat.x].from);
+      }*/
       
       
-      //return m[cat.y][cat.x].from;
-      
-      
-      switch (world->isNeighbor(m[cat.y][cat.x].from,
-                                m[tempExit.y][tempExit.x].from)) {
+      /*switch (m[cat.y][cat.x].weight) {
         case 0:
-          return World::NE(world->getCat());
+          return World::NE(m[cat.y][cat.x].from);
         case 1:
-          return World::NW(world->getCat());
+          return World::NW(m[cat.y][cat.x].from);
         case 2:
-          return World::E(world->getCat());
+          return World::E(m[cat.y][cat.x].from);
         case 3:
-          return World::W(world->getCat());
+          return World::W(m[cat.y][cat.x].from);
         case 4:
-          return World::SW(world->getCat());
+          return World::SW(m[cat.y][cat.x].from);
         case 5:
-          return World::SE(world->getCat());
+          return World::SE(m[cat.y][cat.x].from);
         default:
           throw "random out of range";
-      
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      }*/
 
           //Proffesor's code
       /* auto rand = Random::Range(0, 5);
