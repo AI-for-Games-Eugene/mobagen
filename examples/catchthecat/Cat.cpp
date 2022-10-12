@@ -95,26 +95,24 @@ Point2D Cat::Move(World* world) {
       path.push_back(exit);  // optional
       std::reverse(path.begin(), path.end());
 
-      return cat;
-
-      /*if (!m[cat.y][cat.x].isBlocked) {
-        return World::NE(m[cat.y][cat.x].from);
+      if (!m[cat.y][cat.x].isBlocked) {
+        return World::NE(cat);
       }
       else if (m[cat.y][cat.x].isBlocked) {
-        return World::NW(m[cat.y][cat.x].from);
+        return World::NW(cat);
       }
       else if (m[cat.y][cat.x].isBlocked) {
-        return World::E(m[cat.y][cat.x].from);
+        return World::E(cat);
       }
       else if (m[cat.y][cat.x].isBlocked) {
-        return World::W(m[cat.y][cat.x].from);
+        return World::W(cat);
       }
       else if (m[cat.y][cat.x].isBlocked) {
-        return World::SW(m[cat.y][cat.x].from);
+        return World::SW(cat);
       }
       else if (m[cat.y][cat.x].isBlocked) {
-        return World::SE(m[cat.y][cat.x].from);
-      }*/
+        return World::SE(cat);
+      }
       
       
       /*switch (m[cat.y][cat.x].weight) {
