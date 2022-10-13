@@ -40,15 +40,16 @@ Point2D Cat::Move(World* world) {
         m[head.y][head.x].inQueue = false;
         m[head.y][head.x].visited = true;
 
-        if (head == exit) {
+        if (abs(head.x) >= world->getWorldSideSize()/2 || head.y >= world->getWorldSideSize()/2) {
+          exit = head;
           break;
         }
         
         for (auto neigh : world->neighbors(head)) 
         {
             if (m[neigh.y][neigh.x].visited || m[neigh.y][neigh.x].inQueue ||m[neigh.y][neigh.x].isBlocked || 
-                 abs(neigh.y) >= world->getWorldSideSize() / 2 ||
-                  abs(neigh.x) >= world->getWorldSideSize() / 2)
+                 abs(neigh.y) > world->getWorldSideSize() / 2 ||
+                  abs(neigh.x) > world->getWorldSideSize() / 2)
                 // check other conditions too
             {
                 continue;
@@ -79,6 +80,9 @@ Point2D Cat::Move(World* world) {
 
       while (tempExit != cat) // test if the exit is not infinity before this
       {
+        /*if (m[tempExit.y][tempExit.x].isBlocked) {
+        
+        }*/
         path.push_back(tempExit);
         tempExit = m[tempExit.y][tempExit.x].from; // this is the core to build path
       }
@@ -88,33 +92,18 @@ Point2D Cat::Move(World* world) {
       //and the catcher move would be the head of the path
       
 
-      while (cat != exit) {
+      while (cat != tempExit) {
         path.push_back(cat);
         cat = m[cat.y][cat.x].from;
       }
-      path.push_back(exit);  // optional
+      path.push_back(tempExit);  // optional
+      
       std::reverse(path.begin(), path.end());
+      //cout << path[1].x << " " << path[1].y;
+      return path[1];
+      
+      
 
-      if (!m[cat.y][cat.x].isBlocked) {
-        return World::NE(cat);
-      }
-      else if (m[cat.y][cat.x].isBlocked) {
-        return World::NW(cat);
-      }
-      else if (m[cat.y][cat.x].isBlocked) {
-        return World::E(cat);
-      }
-      else if (m[cat.y][cat.x].isBlocked) {
-        return World::W(cat);
-      }
-      else if (m[cat.y][cat.x].isBlocked) {
-        return World::SW(cat);
-      }
-      else if (m[cat.y][cat.x].isBlocked) {
-        return World::SE(cat);
-      }
-      
-      
       /*switch (m[cat.y][cat.x].weight) {
         case 0:
           return World::NE(m[cat.y][cat.x].from);
