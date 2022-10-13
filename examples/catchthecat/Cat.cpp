@@ -40,16 +40,18 @@ Point2D Cat::Move(World* world) {
         m[head.y][head.x].inQueue = false;
         m[head.y][head.x].visited = true;
 
-        if (abs(head.x) >= world->getWorldSideSize()/2 || head.y >= world->getWorldSideSize()/2) {
+        if (abs(head.x) >= world->getWorldSideSize()/2 || abs(head.y) >= world->getWorldSideSize()/2) {
           exit = head;
           break;
         }
         
         for (auto neigh : world->neighbors(head)) 
         {
-            if (m[neigh.y][neigh.x].visited || m[neigh.y][neigh.x].inQueue ||m[neigh.y][neigh.x].isBlocked || 
-                 abs(neigh.y) > world->getWorldSideSize() / 2 ||
-                  abs(neigh.x) > world->getWorldSideSize() / 2)
+          if (m[neigh.y][neigh.x].visited || m[neigh.y][neigh.x].inQueue ||
+              m[neigh.y][neigh.x].isBlocked ||
+              abs(neigh.y) > world->getWorldSideSize() / 2 ||
+              abs(neigh.x) > world->getWorldSideSize() / 2 ||
+              world->getContent(neigh))
                 // check other conditions too
             {
                 continue;
@@ -97,6 +99,10 @@ Point2D Cat::Move(World* world) {
         cat = m[cat.y][cat.x].from;
       }
       path.push_back(tempExit);  // optional
+      if (exit.x == INT_MAX && exit.y == INT_MAX) {
+      // return Random
+          
+      }
       
       std::reverse(path.begin(), path.end());
       //cout << path[1].x << " " << path[1].y;
