@@ -3,25 +3,12 @@
 #include <stdexcept>
 #include <algorithm>
 
-Point2D Catcher::Move(World* world) {
+Point2D Catcher::Move(World* world) 
+{
   //block path base on the direction where the cat is facing
   //last element
 
 
-
-  /*visited.clear();
-  from.clear();
-  
-  std::vector<queueEntry> queue;
-
-  while (!queue.empty()) {
-    std::sort(queue.begin(), queue.end());
-    
-    auto last = queue[5];
-    queue.erase(queue.end());
-
-    blocked[world->getCat().x - 30][world->getCat().y - 30];
-  }*/
 
   auto side = world->getWorldSideSize()/2;
   auto cat = world->getCat();
@@ -114,16 +101,28 @@ Point2D Catcher::Move(World* world) {
   path.push_back(tempExit);  // optional
 
   if (exit.x == INT_MAX && exit.y == INT_MAX) {
-    // return Random
+    //Randomizer
+    // return path[0];
   }
 
-  
-  return path[0];
+  //if (exit.x == INT_MAX && exit.y == INT_MAX) {
+  //  for (;;) {
+  //    Point2D p = {Random::Range(-side, side), Random::Range(-side, side)};
+  //    auto cat = world->getCat();
+  //    if (cat.x != p.x && cat.y != p.y && !world->getContent(p)) {
+  //      path.push_back(p);
+  //      return path[0];
+  //    }
+  //  }
+  //  // return path[0];
+  //}
+    return path[0];
 
-  /*for(;;) {
-    Point2D p = {Random::Range(-side, side), Random::Range(-side, side)};
-    auto cat = world->getCat();
-    if(cat.x!=p.x && cat.y!=p.y && !world->getContent(p))
-      return p;
-  }*/
+    /*for(;;) {
+      Point2D p = {Random::Range(-side, side), Random::Range(-side, side)};
+      auto cat = world->getCat();
+      if(cat.x!=p.x && cat.y!=p.y && !world->getContent(p))
+        return p;
+    }*/
+  
 }

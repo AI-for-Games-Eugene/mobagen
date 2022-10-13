@@ -99,14 +99,45 @@ Point2D Cat::Move(World* world) {
         cat = m[cat.y][cat.x].from;
       }
       path.push_back(tempExit);  // optional
+
       if (exit.x == INT_MAX && exit.y == INT_MAX) {
-      // return Random
-          
+        // return Random
+        
       }
+
+      //if (exit.x == INT_MAX && exit.y == INT_MAX) {
+      //// return Random
+      //  auto rand = Random::Range(0, 5);
+      //  
+      //  switch (rand) {
+      //    case 0:
+      //      path.push_back(World::NE(path[0]));
+      //      return path[0];
+      //    case 1:
+      //      path.push_back(World::NW(path[0]));
+      //      return path[0];
+      //    case 2:
+      //      path.push_back(World::E(path[0]));
+      //      return path[0];
+      //    case 3:
+      //      path.push_back(World::W(path[0]));
+      //      return path[0];
+      //    case 4:
+      //      path.push_back(World::SW(path[0]));
+      //      return path[0];
+      //    case 5:
+      //      path.push_back(World::SE(path[0]));
+      //      return path[0];
+      //    default:
+      //      throw "random out of range";
+      //  }
+      //}
       
-      std::reverse(path.begin(), path.end());
-      //cout << path[1].x << " " << path[1].y;
-      return path[1];
+      
+       std::reverse(path.begin(), path.end());
+       return path[1];
+      
+      
       
       
 
