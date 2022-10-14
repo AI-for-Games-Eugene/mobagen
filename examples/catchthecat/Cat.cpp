@@ -5,176 +5,122 @@
 #include <math.h>
 
 Point2D Cat::Move(World* world) {
+    // It is set to make sure the cat gets to the open path and escapes
   
-    auto cat = world->getCat();
-  std::map<int, std::map<int, EnrichedMapEntry>> m;
+    auto cat = world->getCat(); // gets Cat Position
 
-      //enrich the map
+    std::map<int, std::map<int, EnrichedMapEntry>> m; //Sets up map
+
+    //enrich the map
       
-      for (auto line = -world->getWorldSideSize() / 2; line >= world->getWorldSideSize() / 2; line++) 
-      {
-        for (auto col = -world->getWorldSideSize() / 2; col >= world->getWorldSideSize() / 2; col++) {
-            m[line][col] = {{INT_MAX, INT_MAX}, false, false, world->getContent({col, line}), INT_MAX}; 
-        }
+    for (auto line = -world->getWorldSideSize() / 2; line >= world->getWorldSideSize() / 2; line++) 
+    {
+      for (auto col = -world->getWorldSideSize() / 2; col >= world->getWorldSideSize() / 2; col++) {
+          m[line][col] = {{INT_MAX, INT_MAX}, false, false, world->getContent({col, line}), INT_MAX}; 
       }
+    }
     
-      m[cat.y][cat.x].isBlocked = true;
-      // build the queue
-      std::vector<Point2D> queue;
+    m[cat.y][cat.x].isBlocked = true; // to make sure that the blocker isn't on top of the cat
 
-      //BOOTSTRAP THE FIRST ELEMENT INTO THE QUEUE
-      queue.push_back({cat});
-      m[cat.y][cat.x].weight = 0;
-      m[cat.y][cat.x].visited = false;
-      m[cat.y][cat.x].from = {INT_MAX, INT_MAX};
-      m[cat.y][cat.x].inQueue = true;
+    
+    std::vector<Point2D> queue; // build the queue
 
-      Point2D exit = {INT_MAX,INT_MAX};
+    //BOOTSTRAP THE FIRST ELEMENT INTO THE QUEUE
+    queue.push_back({cat});
+    m[cat.y][cat.x].weight = 0;
+    m[cat.y][cat.x].visited = false;
+    m[cat.y][cat.x].from = {INT_MAX, INT_MAX};
+    m[cat.y][cat.x].inQueue = true;
 
-      //while we have elements to be visited, visit them!
-      while (!queue.empty()) 
+    Point2D exit = {INT_MAX,INT_MAX};
+
+    //while we have elements to be visited, visit them!
+    while (!queue.empty()) 
+    {
+      //fetch the first element of the queue
+      auto head = queue[0];
+      queue.erase(queue.begin());
+      m[head.y][head.x].inQueue = false;
+      m[head.y][head.x].visited = true;
+
+      if (abs(head.x) >= world->getWorldSideSize()/2 || abs(head.y) >= world->getWorldSideSize()/2) // Checks if the Absolute value of head is grater than or equal to World Size
       {
-        //fetch the first element of the queue
-        auto head = queue[0];
-        queue.erase(queue.begin());
-        m[head.y][head.x].inQueue = false;
-        m[head.y][head.x].visited = true;
-
-        if (abs(head.x) >= world->getWorldSideSize()/2 || abs(head.y) >= world->getWorldSideSize()/2) {
-          exit = head;
-          break;
-        }
+        exit = head; //Exit equals the head
+        break;
+      }
         
-        for (auto neigh : world->neighbors(head)) 
+      for (auto neigh : world->neighbors(head)) { // It loops until all elements are in the queue
+
+        if (m[neigh.y][neigh.x].visited || m[neigh.y][neigh.x].inQueue ||
+            m[neigh.y][neigh.x].isBlocked ||
+            abs(neigh.y) > world->getWorldSideSize() / 2 ||
+            abs(neigh.x) > world->getWorldSideSize() / 2 ||
+            world->getContent(neigh)) // checks to see if thr element is either visted, blocked, in the queue, and that it is in the grid
         {
-          if (m[neigh.y][neigh.x].visited || m[neigh.y][neigh.x].inQueue ||
-              m[neigh.y][neigh.x].isBlocked ||
-              abs(neigh.y) > world->getWorldSideSize() / 2 ||
-              abs(neigh.x) > world->getWorldSideSize() / 2 ||
-              world->getContent(neigh))
-                // check other conditions too
-            {
-                continue;
-            }
-            
-
-            queue.push_back(neigh);
-            m[neigh.y][neigh.x].weight = m[head.y][head.x].weight + 1;
-            m[neigh.y][neigh.x].inQueue = true;
-            m[neigh.y][neigh.x].from = head;
-            
-            
-            
+          continue;
         }
-        // win/exit condition found
 
+        queue.push_back(neigh); // pushes the nighbor into the queue
+
+        m[neigh.y][neigh.x].weight = m[head.y][head.x].weight + 1; // adds the wieght to m Neighbor
+
+        m[neigh.y][neigh.x].inQueue = true; //marks that it is in the queue
+
+        m[neigh.y][neigh.x].from = head; // m nieghbor becomes the head
+      }        
         
-        
-        //mark the head as visited
-        m[head.y][head.x].visited = true;
-      }
+      m[head.y][head.x].visited = true; //mark the head as visited
+    }
 
-      //build the path
-      std::vector<Point2D> path;
+    //build the path
+    std::vector<Point2D> path;
 
-      // current element of the path tempExit;
-      Point2D tempExit = exit;
+    // current element of the path tempExit;
+    Point2D tempExit = exit;
 
-      while (tempExit != cat) // test if the exit is not infinity before this
+    while (tempExit != cat) // test if the exit is not infinity before this
+    {
+      path.push_back(tempExit); // Pushes tempExit into path
+
+      tempExit = m[tempExit.y][tempExit.x].from; // this is the core to build path
+    }
+ 
+    path.push_back(tempExit); // pushes the tempExit into the path again
+
+    if (exit.x == INT_MAX && exit.y == INT_MAX) {
+
+      if (!world->getContent(World::E(cat))) // Checks if East is not blocked
       {
-        /*if (m[tempExit.y][tempExit.x].isBlocked) {
-        
-        }*/
-        path.push_back(tempExit);
-        tempExit = m[tempExit.y][tempExit.x].from; // this is the core to build path
+        return World::E(cat); // returns East
       }
 
-      //now we have the path;
-      // the cat move probably would be the tail 
-      //and the catcher move would be the head of the path
-      
-
-      while (cat != tempExit) {
-        path.push_back(cat);
-        cat = m[cat.y][cat.x].from;
-      }
-      path.push_back(tempExit);  // optional
-
-      if (exit.x == INT_MAX && exit.y == INT_MAX) {
-        // return Random
-        
+      else if (!world->getContent(World::NE(cat))) // Checks if NorthEast is not blocked
+      {
+        return World::NE(cat); // returns NorthEast
       }
 
-      //if (exit.x == INT_MAX && exit.y == INT_MAX) {
-      //// return Random
-      //  auto rand = Random::Range(0, 5);
-      //  
-      //  switch (rand) {
-      //    case 0:
-      //      path.push_back(World::NE(path[0]));
-      //      return path[0];
-      //    case 1:
-      //      path.push_back(World::NW(path[0]));
-      //      return path[0];
-      //    case 2:
-      //      path.push_back(World::E(path[0]));
-      //      return path[0];
-      //    case 3:
-      //      path.push_back(World::W(path[0]));
-      //      return path[0];
-      //    case 4:
-      //      path.push_back(World::SW(path[0]));
-      //      return path[0];
-      //    case 5:
-      //      path.push_back(World::SE(path[0]));
-      //      return path[0];
-      //    default:
-      //      throw "random out of range";
-      //  }
-      //}
-      
-      
-       std::reverse(path.begin(), path.end());
-       return path[1];
-      
-      
-      
-      
+      else if (!world->getContent(World::NW(cat))) // Checks if NorthWest is not blocked
+      {
+        return World::NW(cat); // returns NorthWest
+      }
 
-      /*switch (m[cat.y][cat.x].weight) {
-        case 0:
-          return World::NE(m[cat.y][cat.x].from);
-        case 1:
-          return World::NW(m[cat.y][cat.x].from);
-        case 2:
-          return World::E(m[cat.y][cat.x].from);
-        case 3:
-          return World::W(m[cat.y][cat.x].from);
-        case 4:
-          return World::SW(m[cat.y][cat.x].from);
-        case 5:
-          return World::SE(m[cat.y][cat.x].from);
-        default:
-          throw "random out of range";
-      }*/
+      else if (!world->getContent(World::SE(cat))) // Checks if SouthEast is not blocked
+      {
+        return World::SE(cat); // returns SouthEast
+      }
 
-          //Proffesor's code
-      /* auto rand = Random::Range(0, 5);
-  auto pos = world->getCat();
-  switch(rand){
-    case 0:
-      return World::NE(pos);
-    case 1:
-      return World::NW(pos);
-    case 2:
-      return World::E(pos);
-    case 3:
-      return World::W(pos);
-    case 4:
-      return World::SW(pos);
-    case 5:
-      return World::SE(pos);
-    default:
-      throw "random out of range";
-  }*/
+      else if (!world->getContent(World::SW(cat))) // Checks if SouthWest is not blocked
+      {
+        return World::SW(cat); // returns SouthWest
+      }
+
+      else if (!world->getContent(World::W(cat))) // Checks if West is not blocked
+      {
+        return World::W(cat); // returns West
+      }    
+    }      
+     
+    std::reverse(path.begin(), path.end()); // Reverses the front and end of the path
+
+    return path[1]; // Returns path
 }
