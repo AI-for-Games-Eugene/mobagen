@@ -21,7 +21,9 @@ struct Node {
   bool inline GetWest(){return data>>3 & 0x01 == 0x1;};
 
   // todo set
-  void inline SetNorth(bool x){};
+  void inline SetNorth(bool x) { 
+      data == x; 
+  };
   void inline SetEast(bool x){};
   void inline SetSouth(bool x){};
   void inline SetWest(bool x){};
