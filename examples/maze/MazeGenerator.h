@@ -1,8 +1,11 @@
 #ifndef MOBAGEN_MAZEGENERATOR_H
 #define MOBAGEN_MAZEGENERATOR_H
 
-class MazeGenerator {
+class World;
 
+class MazeGenerator {
+  // todo: in order to step work properly, you have to store your current exploration status in the MazeGenerator members
+  void Step(World * world);
 };
 
 #endif
