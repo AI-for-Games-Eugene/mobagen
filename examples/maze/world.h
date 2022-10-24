@@ -2,6 +2,7 @@
 #define MOBAGEN_WORLD_H
 
 #include "GameObject.h"
+#include "MazeGenerator.h"
 #include "Node.h"
 #include "Point2D.h"
 #include <vector>
@@ -10,7 +11,13 @@ class World: GameObject {
  private:
   int sideSize;
 
-  std::vector<std::vector<bool>> data;
+  MazeGenerator generator;
+
+  // .=
+  // |
+  // even indexes are top elements;
+  // odd indexes are left elements;
+  std::vector<bool> data;
  public:
   explicit World(Engine* pEngine, int size);
 
@@ -25,6 +32,8 @@ class World: GameObject {
   void OnGui(ImGuiContext *context) override;
   void OnDraw(SDL_Renderer* renderer) override;
   void Update(float deltaTime) override;
+
+  void Clear();
 };
 
 #endif
