@@ -10,9 +10,11 @@ Node World::GetNode(const Point2D& point) {
 }
 void World::SetNode(const Point2D& point, const Node& node) {
   // todo implement this
+  
 }
 void World::SetNorth(const Point2D& point, const bool& state) {
   // todo implement this
+  data[0] = state;
 }
 void World::SetEast(const Point2D& point, const bool& state) {
   // todo implement this
