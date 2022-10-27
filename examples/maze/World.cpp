@@ -1,5 +1,4 @@
 #include "World.h"
-#include "MazeGenerator.h"
 #include <chrono>
 
 World::World(Engine* pEngine, int size=11): GameObject(pEngine), sideSize(size) {}
@@ -7,7 +6,10 @@ World::World(Engine* pEngine, int size=11): GameObject(pEngine), sideSize(size) 
 Node World::GetNode(const Point2D& point) {
   auto index = Point2DtoIndex(point);
   // todo: not tested!!
-  return {data[index],data[index+3],data[index+(sideSize+1)*2],data[index+1]};
+  return {data[index],
+          data[index+3],
+          data[index+(sideSize+1)*2],
+          data[index+1]};
 }
 
 bool World::GetNorth(const Point2D& point) {
@@ -27,21 +29,22 @@ bool World::GetWest(const Point2D& point) {
 }
 
 void World::SetNode(const Point2D& point, const Node& node) {
-  // todo implement this
-  
+  data[Point2DtoIndex(point)] = node.GetNorth();
+  data[Point2DtoIndex(point)+3] = node.GetEast();
+  data[Point2DtoIndex(point)+(sideSize+1)*2] = node.GetSouth();
+  data[Point2DtoIndex(point)+1] = node.GetWest();
 }
 void World::SetNorth(const Point2D& point, const bool& state) {
-  // todo implement this
-  data[0] = state;
+  data[Point2DtoIndex(point)] = state;
 }
 void World::SetEast(const Point2D& point, const bool& state) {
-  // todo implement this
+  data[Point2DtoIndex(point)+3] = state;
 }
 void World::SetSouth(const Point2D& point, const bool& state) {
-  // todo implement this
+  data[Point2DtoIndex(point)+(sideSize+1)*2] = state;
 }
 void World::SetWest(const Point2D& point, const bool& state) {
-  // todo implement this
+  data[Point2DtoIndex(point)+1] = state;
 }
 
 void World::Start() {
@@ -106,6 +109,17 @@ void World::OnDraw(SDL_Renderer* renderer){
     if(data[i+1])
       SDL_RenderDrawLine(renderer,(int) pos.x,(int) pos.y,(int) pos.x,(int) (pos.y + linesize));
   }
+
+  for(int i=0; i<sideSize*sideSize; i++) {
+    auto c = colors[i];
+    SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+
+    Vector2 pos = {(float)(i%sideSize), (float)(i/sideSize)};
+    pos *= linesize;
+    pos += displacement;
+    SDL_Rect rect = {(int)(pos.x+1),(int)(pos.y+1), (int)(linesize-1), (int)(linesize-1)};
+    SDL_RenderFillRect(renderer, &rect);
+  }
 }
 
 void World::Update(float deltaTime){
@@ -129,14 +143,25 @@ void World::Clear() {
     else
       data[i] = true;
   }
+
+  colors.clear();
+  colors.resize(sideSize*sideSize);
+  for(int i=0; i<sideSize*sideSize; i++)
+    colors[i] = (Color::Gray).Dark();
 }
 
 void World::step() {
   auto start = std::chrono::high_resolution_clock::now();
-  generator.Step(this);
+  if(generator.Step(this) == false) {
+    isSimulating = false;
+  }
   auto stop = std::chrono::high_resolution_clock::now();
   moveDuration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
 }
 void World::SetNodeColor(const Point2D& node, const Color32& color) {
-  // todo: implement this
+  colors[(node.y+sideSize/2)*sideSize+node.x+sideSize/2] = color;
+}
+
+int World::GetSize() const {
+  return sideSize;
 }
