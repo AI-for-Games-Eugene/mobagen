@@ -17,11 +17,14 @@ bool MazeGenerator::Step(World* world) {
 	//x, y = rand(width), rand(height)
   int x = random.Range(start, end);
   int y = random.Range(start, end);
+  auto walk = stack.back();
+  auto hunt = stack.begin();
 
 	// loop do (do while loop)
   do {
+    visited[walk.y][walk.x];
   
-  } while (true)
+  } while (!stack.empty());
 	//x, y = walk (grid, x, y)
 	//x, y = hunt (grid) unless x
 	//break unless x
@@ -36,12 +39,16 @@ bool MazeGenerator::Step(World* world) {
 
 	//nx, ny = x + DX [dir], y + DY[dir]
 	//if nx >= 0 && ny >= 0 && ny < grid.length && nx < grid[ny].length && grid[ny][nx] == 0
+  if (visited[walk.y][walk.x]) {
+  
+  }
 	//#...
 	//end
 
 	//grid[y][x] | = dir
 	//grid[ny][nx] | = OPPOSITE[dir]
 	//return [nx, ny]
+  return visited[walk.y][walk.x];
 
 	//def hunt(grid)
 	//grid.each_with_index do |row, y|
@@ -65,6 +72,7 @@ bool MazeGenerator::Step(World* world) {
 	//grid[y][x] |= direction
 	//grid[ny][nx] |= OPPOSITE[direction]
 	//return[x, y]
+  return visited[walk.y][walk.x];
 
 	return true;
 }
