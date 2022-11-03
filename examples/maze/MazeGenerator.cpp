@@ -8,9 +8,23 @@
 
 bool MazeGenerator::Step(World* world) {
   //Hunt and Kill Algorithm
-  std::vector<Point2D> stack;
-  std::map<int, std::map<int, bool>> visited;
-  Random random;
+
+	if (stack.empty()) 
+	{
+		auto point = RanStart(world);
+
+		if (point.x == INT_MAX && point.y == INT_MAX) 
+		{
+			return false;
+		}
+                stack.push_back(point);
+                world->SetNodeColor(point, Color::Yellow);
+	}
+  
+  //std::vector<Point2D> stack;
+  //std::map<int, std::map<int, bool>> visited;
+  //Random random;
+
   int end = world->GetSize();
   int start = -world->GetSize() + world->GetSize() + 1;
 
@@ -76,4 +90,32 @@ bool MazeGenerator::Step(World* world) {
 
 	return true;
 }
-void MazeGenerator::Clear(World* world) {}
+void MazeGenerator::Clear(World* world) 
+{
+  visited.clear();
+  stack.clear();
+  auto sideOver2 = world->GetSize() / 2;
+
+  for (int i = -sideOver2; i <= sideOver2; i++) {
+    for (int j = -sideOver2; j <= sideOver2; j++) {
+      visited[i][j] = false;
+    }
+  }
+}
+
+Point2D MazeGenerator::RanStart(World* w) { 
+	auto ran = w->GetSize() / 2;
+
+	for(int y = -ran; y <= ran; y++) 
+	{
+          for (int x = - ran; x <= ran; x++) 
+		  {
+            if (!visited[y][x]) 
+			{
+              return {x, y};
+			}
+
+			return {INT_MAX, INT_MAX};
+		  }
+    }
+}

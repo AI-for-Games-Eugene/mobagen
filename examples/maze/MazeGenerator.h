@@ -6,6 +6,10 @@
 // please do not use this one anymore. Move your code to the specific implementation.
 // I am going to rename this interface soon to be a naive implementation.
 class MazeGenerator: public MazeGeneratorBase {
+  std::vector<Point2D> stack;
+  std::map<int, std::map<int, bool>> visited;
+  Random random;
+  Point2D RanStart(World* w);
  public:
   std::string GetName() override {return "deprecated";};
   // todo: in order to step work properly, you have to store your current exploration status in the MazeGenerator members
