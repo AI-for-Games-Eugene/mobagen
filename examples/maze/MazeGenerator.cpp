@@ -7,91 +7,59 @@
 
 
 bool MazeGenerator::Step(World* world) {
-  //Hunt and Kill Algorithm
-
-	if (stack.empty()) 
-	{
-		auto point = RanStart(world);
-
-		if (point.x == INT_MAX && point.y == INT_MAX) 
-		{
-			return false;
-		}
-                stack.push_back(point);
-                world->SetNodeColor(point, Color::Yellow);
-	}
+        //Hunt and Kill Algorithm
+        //Similar to Recursive Backtracking but it doesn't backtrack
   
-  //std::vector<Point2D> stack;
-  //std::map<int, std::map<int, bool>> visited;
-  //Random random;
+        // check if we need to find a new starting point
+        if (stack.empty()) {
+    auto point = RanStart(world);
+          if (point.x == INT_MAX && point.y == INT_MAX)
+            return false;  // no empty space no fill
+          stack.push_back(point);
+          world->SetNodeColor(point, Color::Red.Dark());
+        }
 
-        /*****************attempt**************************/
-  int end = world->GetSize();
-  int start = -world->GetSize() + world->GetSize() + 1;
+        // visit the current element
+        auto current = stack.back();
+        visited[current.y][current.x] = true;
+        world->SetNodeColor(current, Color::Red.Dark());
 
-  int x = random.Range(start, end);
-  int y = random.Range(start, end);
-  auto walk = stack.back();
-  auto hunt = stack.begin();
+        // check if we should go deeper
+        std::vector<Point2D> visitables = getVisitables(world, current);
 
-	// loop do (do while loop)
-  do {
-    visited[walk.y][walk.x];
-  
-  } while (!stack.empty());
+        // if we should not go deep, pop one element from the stack
+        if (visitables.empty()) {
 
-  if (visited[walk.y][walk.x]) {
-  
-  }
-	return visited[walk.y][walk.x];
+          for (int i = 0; i < stack.size(); i++) {
+            world->SetNodeColor(stack[i], Color::Black);
+          }
+          
+          stack.clear();
+          return true;
+        }
 
-  return visited[walk.y][walk.x];
-        /************************************************************/
+        else 
+        {  // go deeper
+          auto r = Random::Range(0, visitables.size() - 1);
+          auto next = visitables[r];
+          world->SetNodeColor(next, Color::Green);
+          stack.push_back(next);
+          auto delta = next - current;
 
-  //def walk(grid, x, y)
-  //[ N, S, E, W ].shuffle.each do | dir |
-  //nx, ny = x + DX[dir], y + DY[dir] 
-  //if nx >= 0 && ny >= 0 && ny < grid.length && nx < grid[ny].length && grid[ny][nx] == 0
-  //grid[y][x] |= dir
-  //grid[ny][nx] |= OPPOSITE[dir]
-  //return [ nx, ny ]
-  //end
-  //end
-  //nil
-  //end
-  //def hunt(grid)
-  //grid.each_with_index do |row, y|
-  //display_maze(grid, y)
-  //sleep 0.02
-  //row.each_with_index do |cell, x|
-  //next unless cell == 0
-  //neighbors = []
-  //neighbors << N if y > 0 && grid[y - 1][x] != 0
-  //neighbors << W if x > 0 && grid[y][x - 1] != 0
-  //neighbors << E if x + 1 < grid[y].length && grid[y][x + 1] != 0
-  //neighbors << S if y + 1 < grid.length && grid[y + 1][x] != 0
-  //direction = neighbors[rand(neighbors.length)] or next
-  //nx, ny = x + DX[direction], y + DY[direction]
-  //grid[y][x] |= direction
-  //grid[ny][nx] |= OPPOSITE[direction]
-  //return [ x, y ]
-  //end
-  //end
-  //nil
-  //end
-  //print "\e[2J" #clear the screen
-  //x, y = rand(width), rand(height)
-  //loop do
-  //display_maze(grid)
-  //sleep 0.02
-  //x, y = walk(grid, x, y)
-  //x, y = hunt(grid) unless x
-  //break unless x
-  //end
+          // remove walls
 
-
-	return true;
+          if (delta.y == -1)  // north
+            world->SetNorth(current, false);
+          else if (delta.x == 1)  // east
+            world->SetEast(current, false);
+          else if (delta.y == 1)  // south
+            world->SetSouth(current, false);
+          else if (delta.x == -1)  // west
+            world->SetWest(current, false);
+          return true;
+        }
 }
+
 void MazeGenerator::Clear(World* world) 
 {
   visited.clear();
@@ -106,18 +74,43 @@ void MazeGenerator::Clear(World* world)
 }
 
 Point2D MazeGenerator::RanStart(World* w) { 
-	auto ran = w->GetSize() / 2;
+	auto sideOver2 = w->GetSize() / 2;
 
-	for(int y = -ran; y <= ran; y++) 
-	{
-          for (int x = - ran; x <= ran; x++) 
-		  {
-            if (!visited[y][x]) 
-			{
-              return {x, y};
-			}
+  for (int y = -sideOver2; y <= sideOver2; y++)
+    for (int x = -sideOver2; x <= sideOver2; x++)
+      if (!visited[y][x]) return {x, y};
+  return {INT_MAX, INT_MAX};
+}
 
-			return {INT_MAX, INT_MAX};
-		  }
-    }
+std::vector<Point2D> MazeGenerator::getVisitables(World * w, const Point2D& p) {
+  auto sideOver2 = w->GetSize() / 2;
+  std::vector<Point2D> visitables;
+
+  
+  // north
+  if ((abs(p.x) <= sideOver2 &&
+       abs(p.y - 1) <= sideOver2) &&  // should be inside the board
+      !visited[p.y - 1][p.x] &&       // not visited yet
+      w->GetNorth({p.x, p.y - 1}))    // has wall
+    visitables.emplace_back(p.x, p.y - 1);
+  // east
+  if ((abs(p.x + 1) <= sideOver2 &&
+       abs(p.y) <= sideOver2) &&    // should be inside the board
+      !visited[p.y][p.x + 1] &&     // not visited yet
+      w->GetNorth({p.x + 1, p.y}))  // has wall
+    visitables.emplace_back(p.x + 1, p.y);
+  // south
+  if ((abs(p.x) <= sideOver2 &&
+       abs(p.y + 1) <= sideOver2) &&  // should be inside the board
+      !visited[p.y + 1][p.x] &&       // not visited yet
+      w->GetNorth({p.x, p.y + 1}))    // has wall
+    visitables.emplace_back(p.x, p.y + 1);
+  // west
+  if ((abs(p.x - 1) <= sideOver2 &&
+       abs(p.y) <= sideOver2) &&    // should be inside the board
+      !visited[p.y][p.x - 1] &&     // not visited yet
+      w->GetNorth({p.x - 1, p.y}))  // has wall
+    visitables.emplace_back(p.x - 1, p.y);
+
+  return visitables;
 }
