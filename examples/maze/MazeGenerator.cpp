@@ -27,15 +27,24 @@ bool MazeGenerator::Step(World* world) {
 
         // check if we should go deeper
         std::vector<Point2D> visitables = getVisitables(world, current);
-
+        
         // if we should not go deep, pop one element from the stack
         if (visitables.empty()) {
 
           for (int i = 0; i < stack.size(); i++) {
             world->SetNodeColor(stack[i], Color::Black);
           }
-          
+          int j = 0;
+
           stack.clear();
+
+          if (stack[j].y && stack[j].x) 
+          {
+            for (j = 0; j < stack.size(); j++) {
+              world->SetNodeColor(stack[j], Color::Black);
+            }
+          }
+         
           return true;
         }
 
