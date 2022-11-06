@@ -9,6 +9,7 @@
 bool MazeGenerator::Step(World* world) {
         //Hunt and Kill Algorithm
         //Similar to Recursive Backtracking but it doesn't backtrack
+        //Works fine just has a few boxes (which can be used as decorations)
   
         // check if we need to find a new starting point
         if (stack.empty()) {
@@ -40,6 +41,7 @@ bool MazeGenerator::Step(World* world) {
 
         else 
         {  // go deeper
+
           auto r = Random::Range(0, visitables.size() - 1);
           auto next = visitables[r];
           world->SetNodeColor(next, Color::Green);
