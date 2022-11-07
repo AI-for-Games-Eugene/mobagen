@@ -30,20 +30,18 @@ bool MazeGenerator::Step(World* world) {
         
         // if we should not go deep, pop one element from the stack
         if (visitables.empty()) {
-
           for (int i = 0; i < stack.size(); i++) {
             world->SetNodeColor(stack[i], Color::Black);
           }
-          int j = 0;
 
           stack.clear();
+          //after restarting the queue
+          //first one should break walls in two directions
+          //one to make the tunnel accessible
+          //the other one to be visited
 
-          if (stack[j].y && stack[j].x) 
-          {
-            for (j = 0; j < stack.size(); j++) {
-              world->SetNodeColor(stack[j], Color::Black);
-            }
-          }
+          world->SetNodeColor(stack[0], Color::Black);
+
          
           return true;
         }
