@@ -14,8 +14,17 @@ bool MazeGenerator::Step(World* world) {
         // check if we need to find a new starting point
         if (stack.empty()) {
     auto point = RanStart(world);
+          
           if (point.x == INT_MAX && point.y == INT_MAX)
             return false;  // no empty space no fill
+
+          // if (point.x != -world->GetSize() &&
+          //         point.y != -world->GetSize()) {
+          ////remove wall
+          //  world->SetEast(point, false);
+          //visited[point.x - 1][point.y] = true;
+          //}
+
           stack.push_back(point);
           world->SetNodeColor(point, Color::Red.Dark());
         }
@@ -40,7 +49,39 @@ bool MazeGenerator::Step(World* world) {
           //one to make the tunnel accessible
           //the other one to be visited
 
-          world->SetNodeColor(stack[0], Color::Black);
+          auto point = RanStart(world);
+           
+
+                
+                
+
+            
+           if ((abs(point.x + 1) <= world->GetSize() / 2 && abs(point.y) <= world->GetSize() / 2) &&
+               !visited[point.y][point.x + 1] && world->GetNorth({point.x + 1, point.y})) 
+           {
+               world->SetEast(point, false);
+               
+               visited[point.x - 1][point.y] = true;
+               world->SetNodeColor(point, Color::Black);
+
+               world->SetSouth(point, false);
+
+               visited[point.x][point.y + 1] = true;
+               world->SetNodeColor(point, Color::Black);
+
+
+               world->SetWest(point, false);
+
+               visited[point.x + 1][point.y] = true;
+               world->SetNodeColor(point, Color::Black);
+
+               world->SetNorth(point, false);
+
+               visited[point.x][point.y - 1] = true;
+               world->SetNodeColor(point, Color::Black);
+           }
+             
+        
 
          
           return true;
