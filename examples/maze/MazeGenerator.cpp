@@ -18,15 +18,40 @@ bool MazeGenerator::Step(World* world) {
           if (point.x == INT_MAX && point.y == INT_MAX)
             return false;  // no empty space no fill
 
-          // if (point.x != -world->GetSize() &&
-          //         point.y != -world->GetSize()) {
-          ////remove wall
-          //  world->SetEast(point, false);
-          //visited[point.x - 1][point.y] = true;
-          //}
+           if (point.x != -world->GetSize() &&
+                   point.y != -world->GetSize()) {
+          
+             visited[point.x - 1][point.y] = true;
+             auto visit = getVisitables(world, point);
+             
+             
+             //randomize visitable
 
+             auto random = Random::Range(0, visit.size() - 1);
+             auto next = visit[random];
+
+             
+             //remove the wall bewtween the visiables and the point
+
+             
+             if (next.y == -1)  // north
+               world->SetNorth(point, false);
+             else if (next.x == 1)  // east
+               world->SetEast(point, false);
+             else if (next.y == 1)  // south
+               world->SetSouth(point, false);
+             else if (next.x == -1)  // west
+               world->SetWest(point, false);
+
+             
+             
+
+             
+           }
+           
           stack.push_back(point);
           world->SetNodeColor(point, Color::Red.Dark());
+          return true;
         }
 
         // visit the current element
@@ -37,51 +62,13 @@ bool MazeGenerator::Step(World* world) {
         // check if we should go deeper
         std::vector<Point2D> visitables = getVisitables(world, current);
         
-        // if we should not go deep, pop one element from the stack
+
         if (visitables.empty()) {
           for (int i = 0; i < stack.size(); i++) {
             world->SetNodeColor(stack[i], Color::Black);
           }
 
           stack.clear();
-          //after restarting the queue
-          //first one should break walls in two directions
-          //one to make the tunnel accessible
-          //the other one to be visited
-
-          auto point = RanStart(world);
-           
-
-                
-                
-
-            
-           if ((abs(point.x + 1) <= world->GetSize() / 2 && abs(point.y) <= world->GetSize() / 2) &&
-               !visited[point.y][point.x + 1] && world->GetNorth({point.x + 1, point.y})) 
-           {
-               world->SetEast(point, false);
-               
-               visited[point.x - 1][point.y] = true;
-               world->SetNodeColor(point, Color::Black);
-
-               world->SetSouth(point, false);
-
-               visited[point.x][point.y + 1] = true;
-               world->SetNodeColor(point, Color::Black);
-
-
-               world->SetWest(point, false);
-
-               visited[point.x + 1][point.y] = true;
-               world->SetNodeColor(point, Color::Black);
-
-               world->SetNorth(point, false);
-
-               visited[point.x][point.y - 1] = true;
-               world->SetNodeColor(point, Color::Black);
-           }
-             
-        
 
          
           return true;
