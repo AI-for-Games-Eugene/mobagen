@@ -18,40 +18,53 @@ bool MazeGenerator::Step(World* world) {
           if (point.x == INT_MAX && point.y == INT_MAX)
             return false;  // no empty space no fill
 
+
            if (point.x != -world->GetSize() &&
                    point.y != -world->GetSize()) {
-          
-             visited[point.x - 1][point.y] = true;
+            
+             visited[point.x - 1][point.y] = false;
              auto visit = getVisitables(world, point);
              
              
              //randomize visitable
 
-             auto random = Random::Range(0, visit.size() - 1);
-             auto next = visit[random];
 
-             
-             //remove the wall bewtween the visiables and the point
+             auto random = Random::Range(0, visit.size());
+             if (visit.size() != 0) 
+             {
+               auto next = visit[random]; 
 
-             
-             if (next.y == -1)  // north
-               world->SetNorth(point, false);
-             else if (next.x == 1)  // east
-               world->SetEast(point, false);
-             else if (next.y == 1)  // south
-               world->SetSouth(point, false);
-             else if (next.x == -1)  // west
-               world->SetWest(point, false);
+               // remove the wall bewtween the visiables and the point
 
-             
-             
-
-             
+               if (next.y == visited[point.x][point.y - 1])  // north
+               {
+                 world->SetNorth(point, false);
+                 world->SetNodeColor(stack[point.y + 1], Color::Black);
+               }
+                 
+               else if (next.x == visited[point.x + 1][point.y])  // east
+               {
+                 world->SetEast(point, false);
+                 world->SetNodeColor(stack[point.x], Color::Black);
+               }
+                 
+               else if (next.y == visited[point.x][point.y + 1])  // south
+               {
+                 world->SetSouth(point, false);
+                 world->SetNodeColor(stack[point.y], Color::Black);
+               }
+                 
+               else if (next.x == visited[point.x - 1][point.y])  // west
+               {
+                 world->SetWest(point, false);
+                 world->SetNodeColor(stack[point.x + 1], Color::Black);
+               }
+             }
            }
-           
+
           stack.push_back(point);
           world->SetNodeColor(point, Color::Red.Dark());
-          return true;
+          
         }
 
         // visit the current element
