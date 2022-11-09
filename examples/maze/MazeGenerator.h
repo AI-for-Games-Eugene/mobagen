@@ -6,8 +6,6 @@
 #include <vector>
 #include "Point2D.h"
 
-// please do not use this one anymore. Move your code to the specific implementation.
-// I am going to rename this interface soon to be a naive implementation.
 class MazeGenerator: public MazeGeneratorBase {
  private:
   std::vector<Point2D> stack;

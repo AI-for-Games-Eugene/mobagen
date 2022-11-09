@@ -9,7 +9,6 @@
 bool MazeGenerator::Step(World* world) {
         //Hunt and Kill Algorithm
         //Similar to Recursive Backtracking but it doesn't backtrack
-        //Works fine just has a few boxes (which can be used as decorations)
   
         // check if we need to find a new starting point
         if (stack.empty()) {
@@ -18,23 +17,21 @@ bool MazeGenerator::Step(World* world) {
           if (point.x == INT_MAX && point.y == INT_MAX)
             return false;  // no empty space no fill
 
-
            if (point.x != -world->GetSize() &&
                    point.y != -world->GetSize()) {
             
              visited[point.x - 1][point.y] = false;
              auto visit = getVisitables(world, point);
              
-             
-             //randomize visitable
-
-
+             //randomize visitables
              auto random = Random::Range(0, visit.size());
+
+             // remove the wall bewtween the visiables and the point
              if (visit.size() != 0) 
              {
                auto next = visit[random]; 
 
-               // remove the wall bewtween the visiables and the point
+               
 
                if (next.y == visited[point.x][point.y - 1])  // north
                {
@@ -82,7 +79,6 @@ bool MazeGenerator::Step(World* world) {
           }
 
           stack.clear();
-
          
           return true;
         }
