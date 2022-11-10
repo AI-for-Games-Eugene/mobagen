@@ -12,6 +12,7 @@ class MazeGenerator: public MazeGeneratorBase {
   std::map<int, std::map<int, bool>> visited;  // naive. not optimal
   Point2D RanStart(World* w);
   std::vector<Point2D> getVisitables(World* w, const Point2D& p);
+  Point2D getBreakable(World* w, const Point2D& p);
 
  public:
   MazeGenerator() = default;
