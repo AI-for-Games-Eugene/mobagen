@@ -16,7 +16,7 @@ class MazeGenerator: public MazeGeneratorBase {
 
  public:
   MazeGenerator() = default;
-  std::string GetName() override { return "Hunt and Kill"; };
+  std::string GetName() override { return "Hunt and Kill2"; };
   bool Step(World* world) override;
   void Clear(World* world) override;
 };
