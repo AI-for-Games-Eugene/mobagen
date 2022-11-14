@@ -7,6 +7,7 @@
 class ScenarioGeneratorBase {
  public:
   virtual std::vector<Color32> Generate(int sideSize, float displacement=0)=0;
+  std::vector<Color32> limina;
   virtual std::string GetName()=0;
 };
 

@@ -185,34 +185,34 @@ std::vector<Point2D> MazeGenerator::getVisitables(World * w, const Point2D& p) {
   return visitables;
 }
 
-Point2D MazeGenerator::getBreakable(World* w, const Point2D& p) {
+Point2D MazeGenerator::getBreakable(World* world, const Point2D& point) {
 
-    auto sideOver2 = w->GetSize() / 2;
+    auto sideOver2 = world->GetSize() / 2;
   std::vector<Point2D> breakable;
 
   // north
-  if ((abs(p.x) <= sideOver2 && abs(p.y - 1) <= sideOver2) &&  // should be inside the board
-      visited[p.y - 1][p.x] &&        // not visited yet
-      w->GetNorth({p.x, p.y}))        // has wall
-    return {p.x, p.y - 1};
+  if ((abs(point.x) <= sideOver2 && abs(point.y - 1) <= sideOver2) &&  // should be inside the board
+      visited[point.y - 1][point.x] &&        // not visited yet
+      world->GetNorth({point.x, point.y}))        // has wall
+    return {point.x, point.y - 1};
   // east
-  if ((abs(p.x + 1) <= sideOver2 &&
-       abs(p.y) <= sideOver2) &&  // should be inside the board
-      visited[p.y][p.x + 1] &&    // not visited yet
-      w->GetEast({p.x, p.y}))     // has wall
-    return {p.x + 1, p.y};
+  if ((abs(point.x + 1) <= sideOver2 &&
+       abs(point.y) <= sideOver2) &&  // should be inside the board
+      visited[point.y][point.x + 1] &&  // not visited yet
+      world->GetEast({point.x, point.y}))  // has wall
+    return {point.x + 1, point.y};
   // south
-  if ((abs(p.x) <= sideOver2 &&
-       abs(p.y + 1) <= sideOver2) &&  // should be inside the board
-      visited[p.y + 1][p.x] &&       // not visited yet
-      w->GetSouth({p.x, p.y}))    // has wall
-    return {p.x,p.y + 1};
+  if ((abs(point.x) <= sideOver2 &&
+       abs(point.y + 1) <= sideOver2) &&  // should be inside the board
+      visited[point.y + 1][point.x] &&    // not visited yet
+      world->GetSouth({point.x, point.y}))  // has wall
+    return {point.x, point.y + 1};
   // west
-  if ((abs(p.x - 1) <= sideOver2 &&
-       abs(p.y) <= sideOver2) &&    // should be inside the board
-      visited[p.y][p.x - 1] &&      // not visited yet
-      w->GetNorth({p.x - 1, p.y}))  // has wall
-    return {p.x - 1, p.y};
+  if ((abs(point.x - 1) <= sideOver2 &&
+       abs(point.y) <= sideOver2) &&    // should be inside the board
+      visited[point.y][point.x - 1] &&  // not visited yet
+      world->GetNorth({point.x - 1, point.y}))  // has wall
+    return {point.x - 1, point.y};
 
-  return {p.x, p.y};
+  return {point.x, point.y};
 }
