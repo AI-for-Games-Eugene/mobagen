@@ -39,53 +39,7 @@ bool MazeGenerator::Step(World* world) {
               world->SetSouth(point, false);
             else if (delta.x == -1)  // west
               world->SetWest(point, false);
-            return true;
-          
-            
-           /*if (point.x != -world->GetSize() &&
-                   point.y != -world->GetSize()) {
-            
-             visited[point.x - 1][point.y] = false;
-             auto visit = getVisitables(world, point);
-             
-             //randomize visitables
-             auto random = Random::Range(0, visit.size());
-
-             // remove the wall bewtween the visiables and the point
-             if (visit.size() != 0) 
-             {
-               auto next = visit[random]; 
-
-               
-
-               if (next.y == visited[point.x][point.y - 1])  // north
-               {
-                 world->SetNorth(point, false);
-                 world->SetNodeColor(stack[point.y + 1], Color::Black);
-               }
-                 
-               else if (next.x == visited[point.x + 1][point.y])  // east
-               {
-                 world->SetEast(point, false);
-                 world->SetNodeColor(stack[point.x], Color::Black);
-               }
-                 
-               else if (next.y == visited[point.x][point.y + 1])  // south
-               {
-                 world->SetSouth(point, false);
-                 world->SetNodeColor(stack[point.y], Color::Black);
-               }
-                 
-               else if (next.x == visited[point.x - 1][point.y])  // west
-               {
-                 world->SetWest(point, false);
-                 world->SetNodeColor(stack[point.x + 1], Color::Black);
-               }
-             }
-           }*/
-
-          
-          
+            return true;          
         }
 
         // visit the current element
@@ -188,7 +142,7 @@ std::vector<Point2D> MazeGenerator::getVisitables(World * w, const Point2D& p) {
 Point2D MazeGenerator::getBreakable(World* world, const Point2D& point) {
 
     auto sideOver2 = world->GetSize() / 2;
-  std::vector<Point2D> breakable;
+  
 
   // north
   if ((abs(point.x) <= sideOver2 && abs(point.y - 1) <= sideOver2) &&  // should be inside the board
