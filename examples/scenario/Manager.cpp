@@ -3,10 +3,12 @@
 #include "generators/RandomGenerator.h"
 #include <chrono>
 #include <iostream>
+#include "MyGenerator.h"
 Manager::Manager(Engine* engine, int size)
     : GameObject(engine) {
   // todo: add your generator here
   generators.push_back(new RandomScenarioGenerator());
+  generators.push_back(new MyGenerator());
 }
 
 void Manager::SetPixels(std::vector<Color32> &input) {
@@ -140,6 +142,7 @@ void Manager::step() {
   auto start = std::chrono::high_resolution_clock::now();
   auto pixels = generators[generatorId]->Generate(sideSize, accumulatedTime);
   auto step = std::chrono::high_resolution_clock::now();
+  std::cout << pixels.size();
   SetPixels(pixels);
   auto end = std::chrono::high_resolution_clock::now();
   std::cout <<  std::chrono::duration_cast<std::chrono::microseconds>(step - start).count() << " " << std::chrono::duration_cast<std::chrono::microseconds>(end - step).count() << std::endl;
