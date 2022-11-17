@@ -2,8 +2,6 @@
 #define MYGENERATOR_H
 
 #include "GeneratorBase.h"
-#include <map>
-#include <vector>
 
 class MyGenerator : public ScenarioGeneratorBase {
  public:
