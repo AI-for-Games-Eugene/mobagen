@@ -9,11 +9,15 @@ std::vector<Color32> MyGenerator::Generate(int sideSize, float displacement) {
   siv::BasicPerlinNoise<float> noise;
   noise.reseed(1337);
   
-  for (int l = 0; l < sideSize; l++) {
-    for (int c = 0; c < sideSize; c++) {
+  for (int l = 0; l < sideSize; l++) 
+  {
+    for (int c = 0; c < sideSize; c++) 
+    {
       float height = (noise.octave3D(c / 50.0, l / 50.0, displacement, 2) + 1) / 2;      
       Color32 color;
-      if (height >= 0 && height <= 0.1) //Water
+
+      // biomes
+      if (height > 0 && height < 0.1) //Water
       {
         color = Color::Blue;
       }
@@ -27,8 +31,6 @@ std::vector<Color32> MyGenerator::Generate(int sideSize, float displacement) {
       {
         color = Color::Green;
       }
-
-      // keep doing for others until it reaches 1
 
       else if (height > 0.3 && height < 0.5)  //Jungle
       {
@@ -45,10 +47,10 @@ std::vector<Color32> MyGenerator::Generate(int sideSize, float displacement) {
         color = Color::LightYellow;
       }
 
-      else  // Snow
+      else if (height > 0.9 && height < 1)  // Snow
       {
         color = Color::White;
-      }
+      }    
 
       colors.push_back(color);
     }
