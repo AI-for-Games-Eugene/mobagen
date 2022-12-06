@@ -29,6 +29,7 @@ ELSE ()
 ENDIF()
 
 #include(filament.cmake)
+include(threadpool.cmake)
 include(sdl.cmake)
 include(glm.cmake)
 #include(glew.cmake)
