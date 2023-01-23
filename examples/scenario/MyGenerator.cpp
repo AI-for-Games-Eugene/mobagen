@@ -17,27 +17,27 @@ std::vector<Color32> MyGenerator::Generate(int sideSize, float displacement) {
       Color32 color;
 
       // biomes
-      if (height > 0 && height < 0.1) //Water
+      if (height > 0 && height < 0.3) //Water
       {
         color = Color::Blue;
       }
       
-      else if (height > 0.1 && height < 0.2)  // Beach
+      else if (height > 0.3 && height < 0.4)  // Beach
       {
         color = Color::Yellow;
       }
 
-      else if (height > 0.2 && height < 0.3) //Forest
+      else if (height > 0.4 && height < 0.5) //Forest
       {
         color = Color::Green;
       }
 
-      else if (height > 0.3 && height < 0.5)  //Jungle
+      else if (height > 0.5 && height < 0.6)  //Jungle
       {
         color = Color::DarkGreen;
       }
 
-      else if (height > 0.5 && height < 0.7)  //Savannah
+      else if (height > 0.6 && height < 0.7)  //Savannah
       {
         color = Color::Orange;
       }
