@@ -4,11 +4,14 @@
 #include <chrono>
 #include <iostream>
 #include "MyGenerator.h"
+#include "MyWaterErosion.h"
+
 Manager::Manager(Engine* engine, int size)
     : GameObject(engine) {
   // todo: add your generator here
   generators.push_back(new RandomScenarioGenerator());
   generators.push_back(new MyGenerator());
+  generators.push_back(new MYWaterErosion());
 }
 
 void Manager::SetPixels(std::vector<Color32> &input) {
