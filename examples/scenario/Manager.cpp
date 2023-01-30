@@ -1,6 +1,8 @@
 #include "Manager.h"
 #include "Point2D.h"
+#include "generators/ParticleGenerator.h"
 #include "generators/RandomGenerator.h"
+
 #include <chrono>
 #include <iostream>
 #include "MyGenerator.h"
@@ -8,7 +10,8 @@
 
 Manager::Manager(Engine* engine, int size)
     : GameObject(engine) {
-  // todo: add your generator here
+  // todo: add your generator
+  generators.push_back(new ParticleGenerator());
   generators.push_back(new RandomScenarioGenerator());
   generators.push_back(new MyGenerator());
   generators.push_back(new MYWaterErosion());
@@ -61,12 +64,8 @@ Manager::~Manager() {
   texture=nullptr;
 }
 void Manager::Start() {
-  texture = SDL_CreateTexture(engine->window->sdlRenderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, 512, 512);
-  std::vector<Color32> colors;
-  colors.resize(sideSize*sideSize);
-  for(int i=0;i<sideSize*sideSize;i++)
-    colors[i]=Color::Cyan;
-  SetPixels(colors);
+  texture = SDL_CreateTexture(engine->window->sdlRenderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, sideSize, sideSize);
+//  step();
 }
 void Manager::OnGui(ImGuiContext* context) {
   ImGui::SetCurrentContext(context);
@@ -108,12 +107,14 @@ void Manager::OnGui(ImGuiContext* context) {
   }
 
   if(ImGui::Button("Generate")) {
+    accumulatedTime+=deltaTime;
     step();
   }
 
   ImGui::Text("Simulation");
   if(ImGui::Button("Step")) {
     isSimulating = false;
+    accumulatedTime += deltaTime;
     step();
   }
   ImGui::SameLine();
@@ -136,17 +137,16 @@ void Manager::Clear() {
     if (texture != nullptr)
         SDL_DestroyTexture(texture);
     texture = SDL_CreateTexture(engine->window->sdlRenderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, sideSize, sideSize);
-
 }
 int Manager::GetSize() const {
   return sideSize;
 }
 void Manager::step() {
-  auto start = std::chrono::high_resolution_clock::now();
+//  auto start = std::chrono::high_resolution_clock::now();
   auto pixels = generators[generatorId]->Generate(sideSize, accumulatedTime);
   auto step = std::chrono::high_resolution_clock::now();
   std::cout << pixels.size();
   SetPixels(pixels);
-  auto end = std::chrono::high_resolution_clock::now();
-  std::cout <<  std::chrono::duration_cast<std::chrono::microseconds>(step - start).count() << " " << std::chrono::duration_cast<std::chrono::microseconds>(end - step).count() << std::endl;
+//  auto end = std::chrono::high_resolution_clock::now();
+
 }
