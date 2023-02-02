@@ -24,10 +24,7 @@ std::vector<Color32> MYWaterErosion::Generate(int sideSize, float time) {
 
   return heightsToColor();
 }
-std::string MYWaterErosion::GetName() {
-  return "Particle-Based Hydraulic "
-         "Erosion";
-}
+
 std::vector<Color32> MYWaterErosion::heightsToColor() {
   std::vector<Color32> colors;
   for (int y = 0; y < sideSizeCached; y++)
@@ -78,9 +75,9 @@ void MYWaterErosion::generateRandomHeights() {
     }
   }
 }
-glm::vec3 MYWaterErosion::surfaceNormal(int i, int j) {
+glm::vec2 MYWaterErosion::surfaceNormal(int i, int j) {
   //  float scale = 0.1;
-  float scale = 1;
+  float scale = 100;
   /*
     Note: Surface normal is computed in this way, because the square-grid
     surface is meshed using triangles. To avoid spatial artifacts, you need to
@@ -142,17 +139,17 @@ void MYWaterErosion::Erode(float dt) {
 
   dt *= 2;  // speedup it
 
-  // Do a series of iterations! (5 Particles)
+  // Do a series of iterations! (5 WaterDrops)
   for (int i = 0; i < cycles; i++) {
-    // Spawn New Particle
+    // Spawn New WaterDrop
     glm::vec2 startPos = glm::vec2(Random::Range(1, (int)sideSizeCached - 2),
                                    Random::Range(1, (int)sideSizeCached - 2));
-    Particle drop(startPos);
+    WaterDrop drop(startPos);
 
     glm::vec2 dim = glm::vec2(sideSizeCached, sideSizeCached);
     // As long as the droplet exists...
     while (drop.volume > minVol) {
-      // Check if Particle is still in-bounds
+      // Check if WaterDrop is still in-bounds
       //      if(!glm::all(glm::greaterThanEqual(drop.pos, glm::vec2(0))) ||
       //          !glm::all(glm::lessThan(drop.pos, dim)))
       //        break;
@@ -163,11 +160,11 @@ void MYWaterErosion::Erode(float dt) {
           ipos.y >= sideSizeCached - 1)
         break;
 
-      glm::vec3 n = surfaceNormal(ipos.x, ipos.y);  // Surface Normal at
+      glm::vec2 n = surfaceNormal(ipos.x, ipos.y);  // Surface Normal at
                                                     // Position
 
-      // Accelerate particle using newtonian mechanics using the surface normal.
-      drop.speed += dt * glm::vec2(n.x, n.z) /
+      // Accelerate WaterDrop using newtonian mechanics using the surface normal.
+      drop.speed += dt * glm::vec2(n.x, n.y) /
                     (drop.volume * density);  // F = ma, so a = F/m
       drop.pos += dt * drop.speed;
       drop.speed *= (1.0 - dt * friction);  // Friction Factor
@@ -207,4 +204,3 @@ void MYWaterErosion::Erode(float dt) {
   std::cout << "Cycles: " << cycles << "dt: " << (int)(dt * 1000) << "ms"
             << std::endl;
 }
-std::string MYWaterErosion::GetName() { return "MYWaterErosion"; }

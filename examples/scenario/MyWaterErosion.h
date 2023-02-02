@@ -8,7 +8,7 @@ class MYWaterErosion : public ScenarioGeneratorBase {
  private:
   float heights[2048][2048];
   int sideSizeCached = 0;
-  glm::vec3 surfaceNormal(int i, int j);
+  glm::vec2 surfaceNormal(int i, int j);
   std::vector<Color32> heightsToColor();
   void generateRandomHeights();
   void Erode(float dt);
@@ -21,12 +21,12 @@ class MYWaterErosion : public ScenarioGeneratorBase {
 
 public:
   std::vector<Color32> Generate(int sideSize, float displacement = 0) override;
-  std::string GetName() override;
+ std::string GetName() override { return "MYWaterErosion"; };
 };
 
-struct Particle {
+struct WaterDrop {
   // Construct Particle at Position
-  Particle(glm::vec2 _pos) { pos = _pos; }
+  WaterDrop(glm::vec2 _pos) { pos = _pos; }
 
   glm::vec2 pos;
   glm::vec2 speed = glm::vec2(0.0);
