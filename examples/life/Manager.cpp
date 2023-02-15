@@ -1,10 +1,12 @@
 #include "Manager.h"
 #include "ColorT.h"
 #include "rules/JohnConway.h"
+#include "rules/HexagonGameOfLife.h"
 #include <iostream>
 
 Manager::Manager(Engine* pEngine) : GameObject(pEngine) {
   world.Resize(sideSize);
+  rules.push_back(new HexagonGameOfLife());
   rules.push_back(new JohnConway());
 }
 
@@ -23,7 +25,8 @@ void Manager::OnGui(ImGuiContext *context){
               ImGui::GetIO().Framerate);
 
   static auto newSize = sideSize;
-  if(ImGui::SliderInt("Side Size", &newSize, 16, 256)) {
+  if(ImGui::SliderInt("Side Size", &newSize, 5, 256)) {
+    newSize = (newSize/4)*4 + 1;
     if(newSize!=sideSize) {
       sideSize = newSize;
       world.Resize(newSize);
@@ -80,7 +83,23 @@ void Manager::OnGui(ImGuiContext *context){
   static Point2D lastIndexClicked = {INT32_MAX, INT32_MAX};
   if(ImGui::IsMouseDown(ImGuiMouseButton_Left)){
     auto mousePos = ImGui::GetMousePos();
-    auto index = mousePositionToIndex(mousePos);
+    Point2D index;
+    if(rules[ruleId]->GetTileSet()==GameOfLifeTileSetEnum::Square)
+      index = mousePositionToIndex(mousePos);
+    else if(rules[ruleId]->GetTileSet()==GameOfLifeTileSetEnum::Hexagon) {
+      auto windowSize = engine->window->size();
+      auto center = Point2D(windowSize.x / 2, windowSize.y / 2);
+      float minDimension = std::min(windowSize.x, windowSize.y) * 0.99f;
+      auto squareSide = minDimension / sideSize;
+      auto sideSideOver2 = sideSize / 2.0f;
+      index = mousePositionToIndex(mousePos);
+      float displacement = abs(index.y-(int)sideSideOver2)%2 == 1 ? squareSide/2 : 0;
+      mousePos.x-=displacement;
+      index = mousePositionToIndex(mousePos);
+    }
+
+    std::cout << index.to_string() << std::endl;
+
     if(lastIndexClicked!=index) {
       lastIndexClicked = index;
       std::cout << "MatrixPos: " << index.to_string() << std::endl;
@@ -100,7 +119,6 @@ void Manager::OnDraw(SDL_Renderer* renderer){
     return;
   }
   if(rules[ruleId]->GetTileSet()==GameOfLifeTileSetEnum::Square) {
-
     auto windowSize = engine->window->size();
     auto center = Point2D(windowSize.x / 2, windowSize.y / 2);
     float minDimension = std::min(windowSize.x, windowSize.y) * 0.99f;
@@ -146,8 +164,32 @@ void Manager::OnDraw(SDL_Renderer* renderer){
     }
   }
   else if (rules[ruleId]->GetTileSet()==GameOfLifeTileSetEnum::Hexagon){
-    std::cout << "hexagon tileset not implemented yet";
-    return;
+    auto windowSize = engine->window->size();
+    auto center = Point2D(windowSize.x / 2, windowSize.y / 2);
+    float minDimension = std::min(windowSize.x, windowSize.y) * 0.99f;
+    auto squareSide = minDimension / sideSize;
+    auto sideSideOver2 = sideSize / 2.0f;
+
+    // draw cells
+    auto liveCell = Color::Yellow.Dark();
+    auto emptyCell = Color::DarkGray.Dark().Dark().Dark();
+    for (int l = 0; l < sideSize; l++) {
+      float displacement = abs(l-(int)sideSideOver2)%2 == 1 ? squareSide/2 : 0;
+      for (int c = 0; c < sideSize; c++) {
+        auto state = world.Get({c, l});
+        if (state)
+          SDL_SetRenderDrawColor(renderer, liveCell.r, liveCell.g, liveCell.b, SDL_ALPHA_OPAQUE);
+        else
+          SDL_SetRenderDrawColor(renderer, emptyCell.r, emptyCell.g, emptyCell.b, SDL_ALPHA_OPAQUE);
+
+        SDL_Rect rect = {
+            static_cast<int>(ceil(center.x + displacement + (c - sideSideOver2) * squareSide)),
+            static_cast<int>(ceil(center.y + (l - sideSideOver2) * squareSide)),
+            static_cast<int>(squareSide),
+            static_cast<int>(squareSide)};
+        SDL_RenderFillRect(renderer, &rect);
+      }
+    }
   }
 }
 
