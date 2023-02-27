@@ -13,7 +13,10 @@ struct WorldState{
 };
 
 struct Piece{
+	Piece(Piece type)
+	{
 
+	}
 };
 
 class World {

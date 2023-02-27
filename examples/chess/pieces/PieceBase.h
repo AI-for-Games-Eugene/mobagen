@@ -8,6 +8,8 @@ using namespace std;
 class PieceBase {
   // ListPossibleMoves to be used in the interface to draw the possible moves
   // GenerateStates to be used when we explcout << a << " ";ore
+
+	virtual vector<Point2D>
 };
 
 #endif  // MOBAGEN_PIECEBASE_H
