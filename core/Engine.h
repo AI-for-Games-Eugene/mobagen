@@ -2,7 +2,7 @@
 #define ENGINE_H
 
 #include "imgui.h"
-#include "imgui_impl_sdl.h"
+#include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer.h"
 #include "Window.h"
 #include "GameObject.h"
@@ -20,7 +20,7 @@ class GameObject;
 class Engine{
 public:
     Window *window;
-    ImGuiContext *imGuiContext;
+//    ImGuiContext *imGuiContext;
 
     // todo: move this to a scene manager and make this private
     std::unordered_set<GameObject*> gameObjects;
