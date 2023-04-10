@@ -4,12 +4,26 @@ MoBaGEn - Module Based Game Engine - Educational tool to teach game programming 
 
 Join us: [![say thanks](https://img.shields.io/badge/Say%20Thanks-👍-1EAEDB.svg)](https://github.com/InfiniBrains/mobagen/stargazers) [![Discord](https://img.shields.io/discord/956922983727915078)](https://discord.gg/9CdJeQ2XKB)
 
-Metrics: [![Codacy Badge](https://app.codacy.com/project/badge/Grade/1d95c33e061442e39d7e1a697b28cb10)](https://www.codacy.com/gh/InfiniBrains/mobagen/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=InfiniBrains/mobagen&amp;utm_campaign=Badge_Grade) ![GitHub language count](https://img.shields.io/github/languages/count/InfiniBrains/mobagen) ![GitHub search hit counter](https://img.shields.io/github/search/InfiniBrains/mobagen/todo) ![Lines of code](https://img.shields.io/tokei/lines/github.com/InfiniBrains/mobagen) ![GitHub all releases](https://img.shields.io/github/downloads/InfiniBrains/mobagen/total) ![GitHub contributors](https://img.shields.io/github/contributors/InfiniBrains/mobagen)
+Metrics: [![Codacy Badge](https://app.codacy.com/project/badge/Grade/1d95c33e061442e39d7e1a697b28cb10)](https://www.codacy.com/gh/InfiniBrains/mobagen/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=InfiniBrains/mobagen&amp;utm_campaign=Badge_Grade) [![codecov](https://codecov.io/gh/InfiniBrains/mobagen/branch/master/graph/badge.svg?token=RTRPZ2HBZN)](https://codecov.io/gh/InfiniBrains/mobagen) ![GitHub language count](https://img.shields.io/github/languages/count/InfiniBrains/mobagen) ![GitHub search hit counter](https://img.shields.io/github/search/InfiniBrains/mobagen/todo) ![Lines of code](https://img.shields.io/tokei/lines/github.com/InfiniBrains/mobagen) ![GitHub all releases](https://img.shields.io/github/downloads/InfiniBrains/mobagen/total) ![GitHub contributors](https://img.shields.io/github/contributors/InfiniBrains/mobagen)
 
-CI: [![Windows](https://github.com/InfiniBrains/mobagen/actions/workflows/windows.yml/badge.svg)](https://github.com/InfiniBrains/mobagen/actions/workflows/windows.yml) [![Web](https://github.com/InfiniBrains/mobagen/actions/workflows/web.yml/badge.svg)](https://github.com/InfiniBrains/mobagen/actions/workflows/web.yml) [![Linux](https://github.com/InfiniBrains/mobagen/actions/workflows/linux.yml/badge.svg)](https://github.com/InfiniBrains/mobagen/actions/workflows/linux.yml) [![OSX](https://github.com/InfiniBrains/mobagen/actions/workflows/osx.yml/badge.svg)](https://github.com/InfiniBrains/mobagen/actions/workflows/osx.yml) [![pages](https://github.com/InfiniBrains/mobagen/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/InfiniBrains/mobagen/actions/workflows/pages/pages-build-deployment) 
+CI: [![Windows](https://github.com/InfiniBrains/mobagen/actions/workflows/windows.yml/badge.svg)](https://github.com/InfiniBrains/mobagen/actions/workflows/windows.yml) [![Web](https://github.com/InfiniBrains/mobagen/actions/workflows/web.yml/badge.svg)](https://github.com/InfiniBrains/mobagen/actions/workflows/web.yml) [![Linux](https://github.com/InfiniBrains/mobagen/actions/workflows/linux.yml/badge.svg)](https://github.com/InfiniBrains/mobagen/actions/workflows/linux.yml) [![OSX](https://github.com/InfiniBrains/mobagen/actions/workflows/osx.yml/badge.svg)](https://github.com/InfiniBrains/mobagen/actions/workflows/osx.yml) [![Release](https://github.com/InfiniBrains/mobagen/actions/workflows/release.yml/badge.svg)](https://github.com/InfiniBrains/mobagen/actions/workflows/release.yml) [![pages](https://github.com/InfiniBrains/mobagen/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/InfiniBrains/mobagen/actions/workflows/pages/pages-build-deployment) 
+
+# Philosophy
+
+1. Webassembly is the future. The initial plan is to create a Game Editor and Engine to run on browsers or wrap it in apps such as electron, wasm3 or any other;
+2. The engine core should be written in C++;
+3. Scripts in JS, TS or WASM, or any language via specialized module;
+4. The core should be as small as possible and the modules should be as swappable as possible;
+5. Modules are the way to customize and extend the engine. We should create modules to do specific tasks and glue them all together. Ex.: rendering module, physics module, audio module, etc;
+6. A build is simply the combination of: a engine player, packed with the modules used, plugins and the assets;
+7. The engine should be able to run on any platform, but the editor should be web-first;
+8. The company will receive funds from the community to pay the developers and the servers to host the editor. The core will be open source and free to use;
+9. The company will offer subscription model to have access to version control and remote build;
+10. The company will also offer a marketplace to sell assets, plugins and modules.
 
 # Try online
-Before checking it online, some demos are intended to be implemented by you. So most of the demos would looks like empty;
+
+Before checking it online, some demos are intended to be implemented by you. So most of the demos would look like empty;
 
 - [Empty demos](https://infinibrains.github.io/mobagen/).
 - [Flocking demo](https://infinibrains.com/data/flocking) for [this AI class](https://docs.google.com/presentation/d/1OBEY-tb_ubgoq6Mk9lEsCFaYLINni3oPwjH8iAXEQQM/edit?usp=sharing).
@@ -42,11 +56,11 @@ It is the best all-around solution to:
 - Best package manager to import and use third party libs from source code with low maintenance code.
 
 # Architecture
-- Please refer to [this doc.](docs/Architecture.md)
+- Please refer to [this doc.](documentation/Architecture.md)
 - [C++ core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
 
 # Restrictions
-- Don't recreate all game engine stuff, glue them all. "Life es too short to build a game engine from scratch";
+- Don't recreate all game engine stuff, glue them all. "Life is too short to build a game engine from scratch";
 - If a library do not easily compile on all supported platforms, we won't use it.
 - Use consolidated libs and do not reinvent the wheel (only if is strictly needed)
 - Start small and make small steps towards the goal.
@@ -85,5 +99,7 @@ It is the best all-around solution to:
     - [ ] Execution of scripts within their respective contexts
     - [ ] Manipulation of variables within script contexts
     - [ ] Support importing and exporting compiled scripts
+
+[![Star History Chart](https://api.star-history.com/svg?repos=InfiniBrains/mobagen&type=Date)](https://star-history.com/#InfiniBrains/mobagen&Date)
 
 [![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=tolstenko)](https://github.com/anuraghazra/github-readme-stats)
